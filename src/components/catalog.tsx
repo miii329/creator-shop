@@ -1,0 +1,3 @@
+"use client";
+import { useState } from 'react';import Link from 'next/link';import type { Item } from '@/lib/products';
+export default function Catalog({items}:{items:Item[]}){const [q,setQ]=useState('');return <><input aria-label="作品を検索" placeholder="作品やクリエイターを検索" value={q} onChange={e=>setQ(e.target.value)}/><div className="grid">{items.filter(p=>(p.title+p.maker).includes(q)).map(p=><Link key={p.id} href={'/products/'+p.id}><img src={p.image} alt={p.title}/><small>{p.maker}</small><h3>{p.title}</h3><b>¥{p.price.toLocaleString()}</b></Link>)}</div>{!items.length&&<p>まだ作品がありません。最初の作品を出品しましょう。</p>}</>}
