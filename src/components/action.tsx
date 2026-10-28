@@ -1,0 +1,3 @@
+"use client";
+import {useState} from 'react';
+export default function Action({endpoint,body={},label,disabled=false}:{endpoint:string;body?:Record<string,string>;label:string;disabled?:boolean}){const [busy,setBusy]=useState(false),[error,setError]=useState('');return <div><button disabled={disabled||busy} onClick={async()=>{setBusy(true);setError('');try{const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw Error(d.error);window.location.assign(d.url)}catch(e){setError(e instanceof Error?e.message:'処理に失敗しました');setBusy(false)}}}>{busy?'処理中…':label}</button><p role="alert">{error}</p></div>}

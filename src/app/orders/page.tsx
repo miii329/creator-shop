@@ -1,0 +1,3 @@
+import {viewer} from '@/lib/api';import {db} from '@/db';import {order} from '@/db/schema';import {eq} from 'drizzle-orm';import Link from 'next/link';
+export const dynamic='force-dynamic';
+export default async function Orders(){if(!process.env.DATABASE_URL)return <p>注文履歴の表示にはデータベース接続が必要です。</p>;const u=await viewer();if(!u)return <Link href="/login">ログインしてください</Link>;const rows=await db().query.order.findMany({where:eq(order.buyerId,u.id)});return <><h1>注文履歴</h1><p>支払い結果はWebhook受信後に反映されます。</p>{rows.map(o=><div className="buy" key={o.id}><Link href={'/products/'+o.productId}>注文 {o.id.slice(0,8)}</Link><span>¥{o.amount.toLocaleString()} — {o.status==='paid'?'支払い済み':'決済確認待ち'}</span></div>)}{!rows.length&&<p>注文はまだありません。</p>}</>}
